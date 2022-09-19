@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const { Category, Product } = require('../../models');
+const { beforeBulkDestroy } = require('../../models/Product');
 
 // The `/api/categories` endpoint
 
@@ -28,7 +29,7 @@ router.get('/:id', async (req, res) => {
       include: [{ model: Product}],
       where: {id:req.params.id}
     });
-    if (!catData) {
+    if (catData.length == 0) {
       res.status(400).json({ message: 'No data found with the given ID.'});
       return;
     }
@@ -74,8 +75,19 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
   // delete a category by its `id` value
+  try {
+    const deletedCat = await Category.destroy({
+      where: {
+        id: req.params.id
+      }
+    });
+
+    res.status(200).json(deletedCat);
+  } catch (err) {
+    res.status(400).json(err);
+  }
 });
 
 module.exports = router;
