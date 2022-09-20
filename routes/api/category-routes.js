@@ -1,6 +1,5 @@
 const router = require('express').Router();
 const { Category, Product } = require('../../models');
-const { beforeBulkDestroy } = require('../../models/Product');
 
 // The `/api/categories` endpoint
 
