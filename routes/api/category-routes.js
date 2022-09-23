@@ -4,12 +4,13 @@ const { Category, Product } = require('../../models');
 // The `/api/categories` endpoint
 
 router.get('/', async (req, res) => {
-  // find all categories
-  // be sure to include its associated Products
+  
   try {
+    // find all categories and include its associated Products
     const userData = await Category.findAll({
       include: [{ model: Product}]
     });
+    // if no user data, return an error message
     if (!userData) {
       res.status(400).json({ message: 'No data found.'});
       return;
@@ -21,12 +22,13 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/:id', async (req, res) => {
-  // find one category by its `id` value
-  // be sure to include its associated Products
+  
   try {
+    // find one category by its `id` value be sure to include its associated Products
     const catData = await Category.findByPk(req.params.id, {
       include: [{ model: Product}]
     });
+    // if category data, return an error message
     if (!catData) {
       res.status(400).json({ message: 'No data found with the given ID.'});
       return;
@@ -38,8 +40,9 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-  // create a new category
+  
   try {
+    // create a new category with given body
     const catData = await Category.create({
       category_name: req.body.category_name,
     });
@@ -50,8 +53,9 @@ router.post('/', async (req, res) => {
 });
 
 router.put('/:id', async (req, res) => {
-  // update a category by its `id` value
+  
     try {
+      // update a category by its `id` value
       const updatedCat = await Category.update(
         {
           category_name: req.body.category_name
@@ -62,7 +66,7 @@ router.put('/:id', async (req, res) => {
           }
         }
       );
-
+      // if no update category is returned, return an error message
       if(!updatedCat[0]) {
         res.status(404).json({ message: 'No category with this id or given name is already set!'});
         return;
@@ -74,14 +78,15 @@ router.put('/:id', async (req, res) => {
 });
 
 router.delete('/:id', async (req, res) => {
-  // delete a category by its `id` value
+  
   try {
+    // delete a category by its `id` value
     const deletedCat = await Category.destroy({
       where: {
         id: req.params.id
       }
     });
-
+    // if nothing was deleted, return an error message
     if (!deletedCat) {
       res.status(404).json({ message: 'No Category found with that id!'});
       return;
