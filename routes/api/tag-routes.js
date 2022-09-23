@@ -4,12 +4,13 @@ const { Tag, Product, ProductTag } = require('../../models');
 // The `/api/tags` endpoint
 
 router.get('/', async (req, res) => {
-  // find all tags
-  // be sure to include its associated Product data
+  
   try {
+    // find all tags include its associated Product data
     const tagData = await Tag.findAll({
       include: [{model: Product}]
     });
+    // if no tag data is found, return an error message
     if (!tagData) {
       res.status(400).json({ message: 'No data found.' });
       return;
@@ -21,12 +22,13 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/:id', async (req, res) => {
-  // find a single tag by its `id`
-  // be sure to include its associated Product data
+  
   try {
+    // find a single tag by its `id` include its associated Product data
     const tagData = await Tag.findByPk(req.params.id, {
       include: [{model: Product}]
     });
+    // if no tag data is found, return an error
     if(!tagData) {
       res.status(400).json({ message: 'No data found with the given ID.' });
       return;
@@ -38,8 +40,9 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-  // create a new tag
+  
   try {
+    // create a new tag
     const tagData = await Tag.create({
       tag_name: req.body.tag_name
     });
@@ -50,8 +53,9 @@ router.post('/', async (req, res) => {
 });
 
 router.put('/:id', async (req, res) => {
-  // update a tag's name by its `id` value
+  
   try {
+    // update a tag's name by its `id` value
     const updatedTag = await Tag.update(
       {
         tag_name: req.body.tag_name
@@ -62,7 +66,7 @@ router.put('/:id', async (req, res) => {
         }
       }
     );
-
+    // if no updated tag data, return an error message
     if (!updatedTag[0]) {
       res.status(404).json({ message: 'No Tag with this id or given name is already set!' });
     }
@@ -74,14 +78,15 @@ router.put('/:id', async (req, res) => {
 });
 
 router.delete('/:id', async (req, res) => {
-  // delete on tag by its `id` value
+  
   try {
+    // delete on tag by its `id` value
     const deletedTag = await Tag.destroy({
       where: {
         id: req.params.id
       }
     });
-
+    // if no deleted tag, return an error message
     if(!deletedTag) {
       res.status(404).json({ message: 'No Tag found with that id!' });
       return;
